@@ -37,7 +37,8 @@
 #include <linux/barcode_emul.h>
 #elif defined(CONFIG_ARCH_MSM8974) || defined(CONFIG_ARCH_MSM8974PRO)
 #include "../../arch/arm/mach-msm/board-8064.h"
-#if defined(CONFIG_MACH_KLTE_KDI) || defined(CONFIG_MACH_KLTE_DCM) || defined(CONFIG_MACH_KLTE_SBM)
+#if defined(CONFIG_MACH_KLTE_KDI) || defined(CONFIG_MACH_KLTE_DCM) || defined(CONFIG_MACH_KLTE_SBM) \
+	|| defined(CONFIG_MACH_KACTIVELTE_DCM)
 #include <mach/klte_felica_gpio.h>
 #else
 #include <mach/hlte_felica_gpio.h>
@@ -50,7 +51,7 @@
  * log
  ******************************************************************************/
 
-#ifndef CONFIG_SEC_DEBUG
+#if defined(CONFIG_SEC_FACTORY) || !defined(CONFIG_SEC_DEBUG)
 /* shown at FACTORY */
 #define FELICA_PR_ERR(A,...) pr_err("[FELICA]"A,##__VA_ARGS__)
 
@@ -58,7 +59,6 @@
 #define FELICA_PR_INFO(A,...) 
 #define FELICA_PR_DBG(A,...) 
 #else
-extern unsigned int sec_dbg_level;
 
 /* shown at HIGH/MID/LOW, user mode:default LOW, eng mode: default MID*/
 #define FELICA_PR_ERR(A,...) pr_err("[FELICA]"A,##__VA_ARGS__)
@@ -223,7 +223,8 @@ static int felica_uart_open_wait_for_polling(void);
 #elif defined(CONFIG_ARCH_APQ8064)
 #define GPIO_PINID_FELICA_PON			FPGA_GPIO_FELICA_PON
 #elif defined(CONFIG_ARCH_MSM8974) || defined(CONFIG_ARCH_MSM8974PRO)
-#if !defined(CONFIG_MACH_KLTE_KDI) && !defined(CONFIG_MACH_KLTE_DCM) && !defined(CONFIG_MACH_KLTE_SBM)
+#if !defined(CONFIG_MACH_KLTE_KDI) && !defined(CONFIG_MACH_KLTE_DCM) && !defined(CONFIG_MACH_KLTE_SBM) \
+	&& !defined(CONFIG_MACH_KACTIVELTE_DCM)
 #define GPIO_PINID_FELICA_PON			GPIO_FELICA_PON
 #endif // CONFIG_MACH_KLTE
 #endif
@@ -352,7 +353,8 @@ static ssize_t felica_rws_write(struct file *file, const char __user *data, \
 #elif defined(CONFIG_ARCH_APQ8064)
 #define GPIO_PINID_FELICA_INT_REV03			GPIO_FELICA_INT
 #elif defined(CONFIG_ARCH_MSM8974) || defined(CONFIG_ARCH_MSM8974PRO)
-#if defined(CONFIG_MACH_KLTE_KDI) || defined(CONFIG_MACH_KLTE_DCM) || defined(CONFIG_MACH_KLTE_SBM)
+#if defined(CONFIG_MACH_KLTE_KDI) || defined(CONFIG_MACH_KLTE_DCM) || defined(CONFIG_MACH_KLTE_SBM) \
+	|| defined(CONFIG_MACH_KACTIVELTE_DCM)
 #define GPIO_PINID_FELICA_INT				GPIO_FELICA_INT
 #endif	// CONFIG_MACH_KLTE
 #endif	//CONFIG_ARCH_MSM8974
@@ -543,7 +545,8 @@ static ssize_t rfs_poll_read(struct file *file, char __user * buf, size_t len,
 
 /* constant definition */
 /* CXD2235POWER device	*/
-#if !defined(CONFIG_MACH_KLTE_KDI) && !defined(CONFIG_MACH_KLTE_DCM) && !defined(CONFIG_MACH_KLTE_SBM)
+#if !defined(CONFIG_MACH_KLTE_KDI) && !defined(CONFIG_MACH_KLTE_DCM) && !defined(CONFIG_MACH_KLTE_SBM) \
+	&& !defined(CONFIG_MACH_KACTIVELTE_DCM)
 #define GPIO_PINID_NFC_PON				GPIO_PINID_FELICA_PON
 #endif
 #define CXD2235_POWER_DEV_NAME			"snfc_pon"
@@ -591,7 +594,7 @@ static ssize_t snfc_rfs_read(struct file *file, char __user *buf, \
 #define UART_DEV_NAME					"/dev/ttySAC1"
 #elif defined(CONFIG_ARCH_APQ8064)
 #define UART_DEV_NAME					"/dev/ttyHSL2"
-#elif defined(CONFIG_MACH_KLTE_DCM) || defined(CONFIG_MACH_KLTE_KDI) || defined(CONFIG_MACH_KLTE_SBM)
+#elif defined(CONFIG_MACH_KLTE_DCM) || defined(CONFIG_MACH_KLTE_KDI) || defined(CONFIG_MACH_KLTE_SBM) || defined(CONFIG_MACH_KACTIVELTE_DCM)
 #define UART_DEV_NAME					"/dev/ttyHSL2"
 #elif defined(CONFIG_MACH_HLTEDCM)	|| defined(CONFIG_MACH_HLTEKDI) || defined(CONFIG_MACH_JS01LTEDCM)
 #define UART_DEV_NAME					"/dev/ttyHSL1"
